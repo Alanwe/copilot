@@ -20,6 +20,7 @@ Before you can start using the Azure Components Foundry effectively, you'll need
    - Install Python 3.8 or later
    - Install Azure CLI (latest version)
    - Install az ml extension if working with Azure ML components
+   - Install Poetry for dependency management (`curl -sSL https://install.python-poetry.org | python3 -`)
    - Configure Azure CLI authentication (`az login`)
 
 ## Initial Configuration
@@ -72,6 +73,33 @@ Before you can start using the Azure Components Foundry effectively, you'll need
    - Make any necessary adjustments
    - Add detailed component documentation
 
+### Managing Component Dependencies
+
+1. **Initialize Component Dependencies**:
+   ```bash
+   python scripts/manage_dependencies.py init --service {service_name} --component {component_name}
+   ```
+
+2. **Edit the Dependencies**:
+   - Open the generated `pyproject.toml` in the component directory
+   - Add component-specific dependencies under `[tool.poetry.dependencies]`
+   - Version dependencies appropriately using `^version` format
+
+3. **Create Component Environment**:
+   ```bash
+   python scripts/manage_dependencies.py env --service {service_name} --component {component_name}
+   ```
+
+4. **Activate the Component Environment**:
+   ```bash
+   cd components/{service_name}/{component_name}
+   poetry shell
+   ```
+
+5. **Generate Deployment Files**:
+   - Run the manage_dependencies script to update requirements.txt
+   - This is done automatically when creating the environment
+
 ### Testing Components Locally
 
 1. Navigate to the component directory:
@@ -79,12 +107,22 @@ Before you can start using the Azure Components Foundry effectively, you'll need
    cd components/{service_name}/{component_name}
    ```
 
-2. Install dependencies:
+2. Install dependencies using Poetry (preferred):
+   ```bash
+   poetry install
+   ```
+   
+   Or with pip (alternative):
    ```bash
    pip install -r requirements.txt
    ```
 
 3. Run local tests:
+   ```bash
+   poetry run pytest
+   ```
+   
+   Or without Poetry:
    ```bash
    python -m pytest
    ```
@@ -109,6 +147,27 @@ Before you can start using the Azure Components Foundry effectively, you'll need
      python deployment/deploy.py --subscription {subscription-id} --resource-group {resource-group}
      ```
    - Update the manifest manually if needed
+
+3. **Docker Deployment**:
+   - Navigate to the component directory
+   - Build the Docker image:
+     ```bash
+     docker build -t {component-name}:{version} .
+     ```
+   - Run the container:
+     ```bash
+     docker run {component-name}:{version}
+     ```
+
+4. **Azure ML Environment Deployment**:
+   - Use the component's environment.yml file:
+     ```bash
+     az ml environment create --file environment.yml
+     ```
+   - Or use the Docker container:
+     ```bash
+     az ml environment create --image {container-registry}/{component-name}:{version}
+     ```
 
 ### Updating the Component Manifest
 
@@ -166,5 +225,12 @@ If GitHub Actions cannot update the manifest automatically:
    - Never commit secrets or credentials to the repository
    - Use Azure Key Vault for all sensitive information
    - Follow the principle of least privilege for all permissions
+
+5. **Dependency Management**:
+   - Keep component dependencies isolated using Poetry
+   - Document specific version requirements in pyproject.toml
+   - Regularly audit and update dependencies for security
+   - Use dependency locking for reproducible builds
+   - Generate deployment-specific files (requirements.txt, environment.yml) from Poetry
 
 By following these instructions, you'll be able to effectively work with the Azure Components Foundry, handling the tasks that GitHub Copilot can't automate.

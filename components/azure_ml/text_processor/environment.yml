@@ -1,0 +1,14 @@
+name: text-processor
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.8
+  - pip
+  - nltk=3.8.1
+  - scikit-learn=1.3.2
+  - pip:
+    - azure-identity>=1.15.0
+    - azure-keyvault-secrets>=4.7.0
+    - azure-storage-blob>=12.19.0
+    - pydantic>=2.5.0
