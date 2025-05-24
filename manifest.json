@@ -1,0 +1,26 @@
+{
+  "last_updated": "2025-05-24",
+  "components": [],
+  "azure_services": [
+    {
+      "name": "Azure ML",
+      "components": []
+    },
+    {
+      "name": "Azure Functions",
+      "components": []
+    },
+    {
+      "name": "Azure ML Batch Inference",
+      "components": []
+    },
+    {
+      "name": "Azure ML Endpoints",
+      "components": []
+    },
+    {
+      "name": "Azure Managed Endpoints Serverless",
+      "components": []
+    }
+  ]
+}
