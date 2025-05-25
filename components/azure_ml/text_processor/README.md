@@ -24,9 +24,26 @@ This component can be deployed to the following Azure services:
 ## Installation
 
 1. Clone the repository
-2. Install dependencies:
+2. Install dependencies using Poetry (recommended):
+   ```bash
+   cd components/azure_ml/text_processor
+   poetry install
+   ```
+
+   Or using pip:
    ```bash
    pip install -r requirements.txt
+   ```
+
+3. For conda environments:
+   ```bash
+   conda env create -f environment.yml
+   conda activate text-processor
+   ```
+
+4. For Docker:
+   ```bash
+   docker build -t text-processor:latest .
    ```
 
 ## Configuration
