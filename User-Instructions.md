@@ -53,6 +53,84 @@ Before you can start using the Azure Components Foundry effectively, you'll need
                        --secret-permissions get list set delete
    ```
 
+## Administration Scripts
+
+The Azure Components Foundry includes a set of administration scripts in the `/admin` directory to help with setup, configuration, discovery, testing, and deployment tasks:
+
+### Azure Setup and Configuration
+
+```bash
+# Interactive guided setup for Azure resources
+python admin/azure_setup.py interactive
+
+# Set up all required Azure resources
+python admin/azure_setup.py all --resource-group myResourceGroup --location eastus --key-vault myKeyVault --service-principal myServicePrincipal
+```
+
+### Component Discovery and Management
+
+```bash
+# Discover local components
+python admin/discover_components.py local --save
+
+# Discover components deployed in Azure
+python admin/discover_components.py azure --subscription your-subscription-id --save
+
+# Discover both local and Azure components
+python admin/discover_components.py all --save
+```
+
+### Environment Setup and Validation
+
+```bash
+# Validate the development environment
+python admin/env_setup.py validate
+
+# Set up the complete development environment
+python admin/env_setup.py setup-all
+```
+
+### Testing Components
+
+```bash
+# Test all components
+python admin/test_components.py all
+
+# Test a specific component
+python admin/test_components.py component --service service_name --component component_name
+
+# Test only components with recent changes
+python admin/test_components.py changed
+```
+
+### Managing the Component Manifest
+
+```bash
+# Validate the manifest structure
+python admin/manage_manifest.py validate
+
+# List all components in the manifest
+python admin/manage_manifest.py list --format
+
+# Get a summary of the manifest
+python admin/manage_manifest.py summary
+```
+
+### Deploying Components
+
+```bash
+# Deploy all components
+python admin/deploy_components.py all --subscription your-subscription-id --resource-group myResourceGroup --update-manifest
+
+# Deploy a specific component
+python admin/deploy_components.py component --component-id service-component --subscription your-subscription-id --resource-group myResourceGroup
+
+# Deploy all components for a specific service
+python admin/deploy_components.py service --service service_name --subscription your-subscription-id --resource-group myResourceGroup
+```
+
+For detailed usage information, run any script with the `--help` option.
+
 ## Working with the Foundry
 
 ### Creating New Components
