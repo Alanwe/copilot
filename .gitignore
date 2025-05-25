@@ -1,0 +1,33 @@
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# Virtual environments
+venv/
+env/
+ENV/
+.env
+
+# IDE files
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Local configuration
+*.local.json
+*.local.yaml
+*.local.yml
+
+# Logs
+*.log
+
+# Azure credentials and sensitive files
+sp-credentials.json
+*.azureauth
