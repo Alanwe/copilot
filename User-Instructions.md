@@ -15,17 +15,22 @@ Before you can start using the Azure Components Foundry effectively, you'll need
    - Create a Resource Group for component deployments
    - Set up Azure Key Vault for secure key management
    - Configure Azure AD permissions and service principals
+   - For detailed Azure setup instructions, see [Azure Setup Guide](docs/Azure_Setup.md)
 
 3. **Local Development Environment**:
    - Install Python 3.8 or later
    - Install Azure CLI (latest version)
+   - Install Azure CLI extensions required for your components
    - Install az ml extension if working with Azure ML components
    - Install Poetry for dependency management (`curl -sSL https://install.python-poetry.org | python3 -`)
    - Configure Azure CLI authentication (`az login`)
+   - For automated setup, use `python admin/env_setup.py setup-all`
 
 ## Initial Configuration
 
 ### Azure Authentication Setup
+
+For detailed authentication instructions and security best practices, please see the [Azure Setup Guide](docs/Azure_Setup.md#authentication-methods).
 
 1. Create a service principal for GitHub Actions:
    ```bash
@@ -303,6 +308,7 @@ If GitHub Actions cannot update the manifest automatically:
    - Never commit secrets or credentials to the repository
    - Use Azure Key Vault for all sensitive information
    - Follow the principle of least privilege for all permissions
+   - See the [Security Best Practices](docs/Azure_Setup.md#security-best-practices) section in the Azure Setup Guide
 
 5. **Dependency Management**:
    - Keep component dependencies isolated using Poetry
