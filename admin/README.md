@@ -2,6 +2,8 @@
 
 This directory contains administration scripts that support the Azure Components Foundry in terms of setup, configuration, discovery, testing, and deployment. These scripts are designed to work together and build on top of each other to provide a comprehensive administration experience.
 
+> **Note:** For detailed Azure setup instructions and best practices, please refer to the [Azure Setup Guide](../docs/Azure_Setup.md).
+
 ## Available Scripts
 
 ### Azure Setup and Configuration

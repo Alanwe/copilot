@@ -242,6 +242,12 @@ def setup_azure_cli():
                 logging.error("Please install manually: https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-macos")
                 return False
         
+        elif system == "windows":
+            logging.info("For Windows, please install Azure CLI from the official Microsoft installer")
+            logging.info("Download URL: https://aka.ms/installazurecliwindows")
+            logging.error("Cannot automatically install Azure CLI on Windows")
+            return False
+            
         else:
             logging.error(f"Automatic Azure CLI installation not supported on {system}")
             logging.error("Please install manually: https://docs.microsoft.com/en-us/cli/azure/install-azure-cli")
@@ -403,6 +409,91 @@ def setup_component_environments():
         return {"status": "error", "message": str(e)}
 
 
+def install_azure_extensions(extensions=None, upgrade=False):
+    """
+    Install or update specified Azure CLI extensions.
+    
+    Args:
+        extensions: List of extension names to install, or None for common extensions
+        upgrade: Whether to upgrade existing extensions
+        
+    Returns:
+        A dictionary with results of extension operations.
+    """
+    if not shutil.which("az"):
+        logging.error("Azure CLI not found. Please install Azure CLI first.")
+        return {"status": "error", "message": "Azure CLI not found"}
+        
+    # Default common extensions if none specified
+    if not extensions:
+        extensions = ["azure-devops", "storage-preview"]
+        
+    results = {
+        "installed": [],
+        "updated": [],
+        "failed": [],
+        "status": "ok"
+    }
+    
+    try:
+        # List existing extensions
+        list_result = subprocess.run(
+            ["az", "extension", "list", "--output", "json"],
+            capture_output=True, text=True, check=True
+        )
+        installed_extensions = json.loads(list_result.stdout)
+        installed_names = [ext["name"] for ext in installed_extensions]
+        
+        # Update existing extensions if requested
+        if upgrade:
+            logging.info("Upgrading Azure CLI extensions...")
+            upgrade_result = subprocess.run(
+                ["az", "extension", "update", "--all"],
+                capture_output=True, text=True, check=False
+            )
+            if upgrade_result.returncode == 0:
+                results["updated"] = installed_names
+                logging.info(f"Successfully updated extensions: {', '.join(installed_names)}")
+            else:
+                logging.warning(f"Failed to update extensions: {upgrade_result.stderr}")
+                results["status"] = "warning"
+        
+        # Install requested extensions
+        for extension in extensions:
+            if extension in installed_names:
+                logging.info(f"Extension '{extension}' is already installed")
+                continue
+                
+            logging.info(f"Installing Azure CLI extension: {extension}")
+            install_result = subprocess.run(
+                ["az", "extension", "add", "--name", extension, "--output", "json"],
+                capture_output=True, text=True, check=False
+            )
+            
+            if install_result.returncode == 0:
+                results["installed"].append(extension)
+                logging.info(f"Successfully installed extension: {extension}")
+            else:
+                results["failed"].append({
+                    "name": extension,
+                    "error": install_result.stderr.strip()
+                })
+                logging.error(f"Failed to install extension '{extension}': {install_result.stderr}")
+                results["status"] = "error"
+                
+        return results
+            
+    except subprocess.CalledProcessError as e:
+        logging.error(f"Failed to manage Azure extensions: {e}")
+        if e.stderr:
+            logging.error(e.stderr)
+        return {"status": "error", "message": str(e), "stderr": e.stderr}
+        
+    except Exception as e:
+        logging.error(f"Error managing Azure extensions: {str(e)}")
+        return {"status": "error", "message": str(e)}
+
+
 def setup_azure_environment(subscription_id=None, resource_group=None):
     """
     Configure the Azure environment for the project.
@@ -502,6 +593,14 @@ def main():
         "--azure-cli", action="store_true", help="Install Azure CLI"
     )
     install_parser.add_argument(
+        "--azure-extensions", nargs="*", metavar="EXT",
+        help="Install specific Azure CLI extensions (space-separated list)"
+    )
+    install_parser.add_argument(
+        "--upgrade-extensions", action="store_true", 
+        help="Upgrade installed Azure extensions"
+    )
+    install_parser.add_argument(
         "--all", action="store_true", help="Install all required tools"
     )
     
@@ -567,6 +666,20 @@ def main():
         
         if args.all or args.azure_cli:
             setup_azure_cli()
+            
+        if args.all or args.azure_extensions is not None or args.upgrade_extensions:
+            # Only try to install extensions if they're explicitly requested or --all is specified
+            if shutil.which("az"):
+                extensions_result = install_azure_extensions(
+                    extensions=args.azure_extensions,
+                    upgrade=args.upgrade_extensions or args.all
+                )
+                if extensions_result["status"] != "ok":
+                    logging.warning("Some Azure extensions could not be installed or updated")
+            else:
+                logging.error("Azure CLI not found. Cannot install extensions.")
+                if not args.azure_cli and not args.all:
+                    logging.error("Use --azure-cli to install the Azure CLI first")
     
     elif args.command == "setup-root":
         if setup_root_environment():
@@ -600,6 +713,11 @@ def main():
         # Install required tools
         setup_poetry()
         setup_azure_cli()
+        
+        # Install common Azure extensions if CLI is available
+        if shutil.which("az"):
+            logging.info("Installing common Azure CLI extensions...")
+            install_azure_extensions(upgrade=True)
         
         # Set up root environment
         if not setup_root_environment():
