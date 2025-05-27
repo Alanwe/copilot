@@ -76,4 +76,16 @@ To get started with the Azure Components Foundry:
 1. Clone this repository
 2. Review the component guidelines in `.github/copilot-instructions`
 3. Set up the required Azure resources for component deployment
+   - See [Azure Setup Guide](docs/Azure_Setup.md) for detailed instructions
+   - Use the devcontainer for seamless development with Azure
 4. Explore existing components in the components gallery
+
+## Azure Integration
+
+The Azure Components Foundry provides seamless Azure integration:
+- Secure authentication in both devcontainers and GitHub Actions
+- Automatic detection of environment and appropriate authentication method
+- Service principal support for non-interactive environments
+- Helper utilities in the common/authentication module
+
+For detailed setup instructions, refer to the [Azure Setup Guide](docs/Azure_Setup.md).

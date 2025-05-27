@@ -30,4 +30,5 @@ ENV/
 
 # Azure credentials and sensitive files
 sp-credentials.json
-*.azureauth
+*.azureauth# Azure credentials environment file for devcontainer
+.devcontainer/devcontainer.env

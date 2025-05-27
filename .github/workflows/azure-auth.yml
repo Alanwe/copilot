@@ -1,0 +1,38 @@
+name: Azure Authentication
+
+on:
+  workflow_call:
+    inputs:
+      resource-group:
+        description: 'Azure resource group to use'
+        required: false
+        type: string
+    secrets:
+      AZURE_CREDENTIALS:
+        description: 'Azure service principal credentials JSON from az ad sp create-for-rbac --sdk-auth'
+        required: true
+
+jobs:
+  azure-auth:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      
+      - name: Set resource group (if provided)
+        if: ${{ inputs.resource-group }}
+        run: |
+          echo "AZURE_RESOURCE_GROUP=${{ inputs.resource-group }}" >> $GITHUB_ENV
+          echo "Using resource group: ${{ inputs.resource-group }}"
+          
+      - name: Get subscription info
+        run: |
+          SUBSCRIPTION_ID=$(az account show --query id -o tsv)
+          SUBSCRIPTION_NAME=$(az account show --query name -o tsv)
+          echo "AZURE_SUBSCRIPTION_ID=${SUBSCRIPTION_ID}" >> $GITHUB_ENV
+          echo "Connected to Azure subscription: ${SUBSCRIPTION_NAME} (${SUBSCRIPTION_ID})"
