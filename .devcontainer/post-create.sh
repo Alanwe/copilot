@@ -3,6 +3,14 @@ set -e
 
 echo "Running post-creation setup..."
 
+# Check if Poetry is installed, install if not available
+if ! command -v poetry &> /dev/null; then
+  echo "Poetry not found, installing..."
+  curl -sSL https://install.python-poetry.org | python3 -
+  export PATH="$HOME/.local/bin:$PATH"
+  echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+fi
+
 # Install project dependencies
 if [ -f "pyproject.toml" ]; then
   echo "Installing project dependencies with Poetry..."
@@ -23,13 +31,13 @@ if az account show > /dev/null 2>&1; then
   mkdir -p ~/.azure/workspacedefaults
   
   # Create workspace config file
-  cat > ~/.azure/workspacedefaults/config.json << EOF
+  cat > ~/.azure/workspacedefaults/config.json << EOFMARKER
 {
   "defaults": {
     "subscription": "$SUBSCRIPTION_ID"
   }
 }
-EOF
+EOFMARKER
 
   echo "Azure workspace defaults configured."
 else
