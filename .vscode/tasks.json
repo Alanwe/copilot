@@ -1,0 +1,732 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Azure: Login",
+      "type": "shell",
+      "command": "az login",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Azure: Login with device code",
+      "type": "shell",
+      "command": "az login --use-device-code",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Azure: List accounts",
+      "type": "shell",
+      "command": "az account list --output table",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Azure: Set subscription",
+      "type": "shell",
+      "command": "az account set --subscription ${input:subscriptionId}",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Azure ML: List workspaces",
+      "type": "shell",
+      "command": "az ml workspace list --output table",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Azure ML: Create workspace",
+      "type": "shell",
+      "command": "az ml workspace create --name ${input:workspaceName} --resource-group ${input:resourceGroup}",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Azure ML: Show workspace details",
+      "type": "shell",
+      "command": "az ml workspace show --name ${input:workspaceName} --resource-group ${input:resourceGroup}",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Azure ML: List components",
+      "type": "shell",
+      "command": "az ml component list --workspace-name ${input:workspaceName} --resource-group ${input:resourceGroup}",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Azure ML: Show component details",
+      "type": "shell",
+      "command": "az ml component show --name ${input:componentName} --version ${input:componentVersion} --workspace-name ${input:workspaceName} --resource-group ${input:resourceGroup}",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Azure ML: Create component from YAML",
+      "type": "shell",
+      "command": "az ml component create --file ${input:yamlFilePath} --workspace-name ${input:workspaceName} --resource-group ${input:resourceGroup}",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Azure ML: List jobs",
+      "type": "shell",
+      "command": "az ml job list --workspace-name ${input:workspaceName} --resource-group ${input:resourceGroup}",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Azure ML: Show job details",
+      "type": "shell",
+      "command": "az ml job show --name ${input:jobName} --workspace-name ${input:workspaceName} --resource-group ${input:resourceGroup}",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Azure ML: Create job from YAML",
+      "type": "shell",
+      "command": "az ml job create --file ${input:yamlFilePath} --workspace-name ${input:workspaceName} --resource-group ${input:resourceGroup}",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Azure ML: List data assets",
+      "type": "shell",
+      "command": "az ml data list --workspace-name ${input:workspaceName} --resource-group ${input:resourceGroup}",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Azure ML: Show data asset details",
+      "type": "shell",
+      "command": "az ml data show --name ${input:dataName} --version ${input:dataVersion} --workspace-name ${input:workspaceName} --resource-group ${input:resourceGroup}",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Azure ML: Create data asset",
+      "type": "shell",
+      "command": "az ml data create --file ${input:yamlFilePath} --workspace-name ${input:workspaceName} --resource-group ${input:resourceGroup}",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Azure ML: List datastores",
+      "type": "shell",
+      "command": "az ml datastore list --workspace-name ${input:workspaceName} --resource-group ${input:resourceGroup}",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Azure ML: Show datastore details",
+      "type": "shell",
+      "command": "az ml datastore show --name ${input:datastoreName} --workspace-name ${input:workspaceName} --resource-group ${input:resourceGroup}",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Azure ML: Create datastore",
+      "type": "shell",
+      "command": "az ml datastore create --name ${input:datastoreName} --type ${input:datastoreType} --workspace-name ${input:workspaceName} --resource-group ${input:resourceGroup}",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Azure ML: List environments",
+      "type": "shell",
+      "command": "az ml environment list --workspace-name ${input:workspaceName} --resource-group ${input:resourceGroup}",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Azure ML: Show environment details",
+      "type": "shell",
+      "command": "az ml environment show --name ${input:environmentName} --version ${input:environmentVersion} --workspace-name ${input:workspaceName} --resource-group ${input:resourceGroup}",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Azure ML: Create environment",
+      "type": "shell",
+      "command": "az ml environment create --file ${input:yamlFilePath} --workspace-name ${input:workspaceName} --resource-group ${input:resourceGroup}",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Azure ML: List compute resources",
+      "type": "shell",
+      "command": "az ml compute list --workspace-name ${input:workspaceName} --resource-group ${input:resourceGroup}",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Azure ML: Show compute details",
+      "type": "shell",
+      "command": "az ml compute show --name ${input:computeName} --workspace-name ${input:workspaceName} --resource-group ${input:resourceGroup}",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Azure ML: Create compute cluster",
+      "type": "shell",
+      "command": "az ml compute create --name ${input:computeName} --type amlcompute --min-instances ${input:minInstances} --max-instances ${input:maxInstances} --workspace-name ${input:workspaceName} --resource-group ${input:resourceGroup}",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Azure ML: List online endpoints",
+      "type": "shell",
+      "command": "az ml online-endpoint list --workspace-name ${input:workspaceName} --resource-group ${input:resourceGroup}",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Azure ML: Show online endpoint details",
+      "type": "shell",
+      "command": "az ml online-endpoint show --name ${input:endpointName} --workspace-name ${input:workspaceName} --resource-group ${input:resourceGroup}",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Azure ML: Create online endpoint",
+      "type": "shell",
+      "command": "az ml online-endpoint create --name ${input:endpointName} --file ${input:yamlFilePath} --workspace-name ${input:workspaceName} --resource-group ${input:resourceGroup}",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Azure ML: List online deployments",
+      "type": "shell",
+      "command": "az ml online-deployment list --endpoint-name ${input:endpointName} --workspace-name ${input:workspaceName} --resource-group ${input:resourceGroup}",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Azure ML: Show online deployment details",
+      "type": "shell",
+      "command": "az ml online-deployment show --name ${input:deploymentName} --endpoint-name ${input:endpointName} --workspace-name ${input:workspaceName} --resource-group ${input:resourceGroup}",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Azure ML: Create online deployment",
+      "type": "shell",
+      "command": "az ml online-deployment create --name ${input:deploymentName} --endpoint-name ${input:endpointName} --file ${input:yamlFilePath} --workspace-name ${input:workspaceName} --resource-group ${input:resourceGroup}",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Azure CosmosDB: List accounts",
+      "type": "shell",
+      "command": "az cosmosdb list --output table",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Azure CosmosDB: Show account details",
+      "type": "shell",
+      "command": "az cosmosdb show --name ${input:cosmosAccountName} --resource-group ${input:resourceGroup}",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Azure CosmosDB: Create account",
+      "type": "shell",
+      "command": "az cosmosdb create --name ${input:cosmosAccountName} --resource-group ${input:resourceGroup}",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Azure CosmosDB: List databases",
+      "type": "shell",
+      "command": "az cosmosdb sql database list --account-name ${input:cosmosAccountName} --resource-group ${input:resourceGroup}",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Azure CosmosDB: Create database",
+      "type": "shell",
+      "command": "az cosmosdb sql database create --account-name ${input:cosmosAccountName} --name ${input:databaseName} --resource-group ${input:resourceGroup}",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Azure CosmosDB: List containers",
+      "type": "shell",
+      "command": "az cosmosdb sql container list --account-name ${input:cosmosAccountName} --database-name ${input:databaseName} --resource-group ${input:resourceGroup}",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Azure CosmosDB: Create container",
+      "type": "shell",
+      "command": "az cosmosdb sql container create --account-name ${input:cosmosAccountName} --database-name ${input:databaseName} --name ${input:containerName} --partition-key-path ${input:partitionKeyPath} --resource-group ${input:resourceGroup}",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Azure Storage: List accounts",
+      "type": "shell",
+      "command": "az storage account list --output table",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Azure Storage: Show account details",
+      "type": "shell",
+      "command": "az storage account show --name ${input:storageAccountName} --resource-group ${input:resourceGroup}",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Azure Storage: Create account",
+      "type": "shell",
+      "command": "az storage account create --name ${input:storageAccountName} --resource-group ${input:resourceGroup} --location ${input:location} --sku ${input:sku}",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Azure Storage: List containers",
+      "type": "shell",
+      "command": "az storage container list --account-name ${input:storageAccountName} --auth-mode login",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Azure Storage: Create container",
+      "type": "shell",
+      "command": "az storage container create --name ${input:containerName} --account-name ${input:storageAccountName} --auth-mode login",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Azure Storage: List blobs",
+      "type": "shell",
+      "command": "az storage blob list --container-name ${input:containerName} --account-name ${input:storageAccountName} --auth-mode login",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Azure Storage: Upload blob",
+      "type": "shell",
+      "command": "az storage blob upload --container-name ${input:containerName} --file ${input:filePath} --name ${input:blobName} --account-name ${input:storageAccountName} --auth-mode login",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Azure Functions: List function apps",
+      "type": "shell",
+      "command": "az functionapp list --output table",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Azure Functions: Show function app details",
+      "type": "shell",
+      "command": "az functionapp show --name ${input:functionAppName} --resource-group ${input:resourceGroup}",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Azure Functions: Create function app",
+      "type": "shell",
+      "command": "az functionapp create --name ${input:functionAppName} --storage-account ${input:storageAccountName} --consumption-plan-location ${input:location} --resource-group ${input:resourceGroup} --runtime python --runtime-version 3.9 --functions-version 4",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Azure Functions: List functions",
+      "type": "shell",
+      "command": "az functionapp function list --name ${input:functionAppName} --resource-group ${input:resourceGroup}",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Azure Functions: Deploy function app",
+      "type": "shell",
+      "command": "az functionapp deployment source config-zip --name ${input:functionAppName} --resource-group ${input:resourceGroup} --src ${input:zipFilePath}",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Azure ContainerApp: List container apps",
+      "type": "shell",
+      "command": "az containerapp list --output table",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Azure ContainerApp: Show container app details",
+      "type": "shell",
+      "command": "az containerapp show --name ${input:containerAppName} --resource-group ${input:resourceGroup}",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Azure ContainerApp: Create container app environment",
+      "type": "shell",
+      "command": "az containerapp env create --name ${input:envName} --resource-group ${input:resourceGroup} --location ${input:location}",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Azure ContainerApp: Create container app",
+      "type": "shell",
+      "command": "az containerapp create --name ${input:containerAppName} --resource-group ${input:resourceGroup} --environment ${input:envName} --image ${input:imageName} --target-port ${input:targetPort} --ingress 'external'",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Azure ContainerApp: Update container app",
+      "type": "shell",
+      "command": "az containerapp update --name ${input:containerAppName} --resource-group ${input:resourceGroup} --image ${input:imageName}",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    }
+  ],
+  "inputs": [
+    {
+      "id": "subscriptionId",
+      "description": "Azure Subscription ID",
+      "type": "promptString"
+    },
+    {
+      "id": "resourceGroup",
+      "description": "Resource Group Name",
+      "type": "promptString"
+    },
+    {
+      "id": "workspaceName",
+      "description": "Azure ML Workspace Name",
+      "type": "promptString"
+    },
+    {
+      "id": "location",
+      "description": "Azure Region/Location",
+      "type": "promptString",
+      "default": "eastus"
+    },
+    {
+      "id": "componentName",
+      "description": "Azure ML Component Name",
+      "type": "promptString"
+    },
+    {
+      "id": "componentVersion",
+      "description": "Azure ML Component Version",
+      "type": "promptString",
+      "default": "latest"
+    },
+    {
+      "id": "yamlFilePath",
+      "description": "Path to YAML configuration file",
+      "type": "promptString"
+    },
+    {
+      "id": "jobName",
+      "description": "Azure ML Job Name",
+      "type": "promptString"
+    },
+    {
+      "id": "dataName",
+      "description": "Azure ML Data Asset Name",
+      "type": "promptString"
+    },
+    {
+      "id": "dataVersion",
+      "description": "Azure ML Data Asset Version",
+      "type": "promptString",
+      "default": "latest"
+    },
+    {
+      "id": "datastoreName",
+      "description": "Azure ML Datastore Name",
+      "type": "promptString"
+    },
+    {
+      "id": "datastoreType",
+      "description": "Azure ML Datastore Type",
+      "type": "promptString",
+      "default": "AzureBlob"
+    },
+    {
+      "id": "environmentName",
+      "description": "Azure ML Environment Name",
+      "type": "promptString"
+    },
+    {
+      "id": "environmentVersion",
+      "description": "Azure ML Environment Version",
+      "type": "promptString",
+      "default": "latest"
+    },
+    {
+      "id": "computeName",
+      "description": "Azure ML Compute Name",
+      "type": "promptString"
+    },
+    {
+      "id": "minInstances",
+      "description": "Minimum number of instances",
+      "type": "promptString",
+      "default": "0"
+    },
+    {
+      "id": "maxInstances",
+      "description": "Maximum number of instances",
+      "type": "promptString",
+      "default": "1"
+    },
+    {
+      "id": "endpointName",
+      "description": "Azure ML Online Endpoint Name",
+      "type": "promptString"
+    },
+    {
+      "id": "deploymentName",
+      "description": "Azure ML Online Deployment Name",
+      "type": "promptString"
+    },
+    {
+      "id": "cosmosAccountName",
+      "description": "Azure Cosmos DB Account Name",
+      "type": "promptString"
+    },
+    {
+      "id": "databaseName",
+      "description": "Database Name",
+      "type": "promptString"
+    },
+    {
+      "id": "containerName",
+      "description": "Container Name",
+      "type": "promptString"
+    },
+    {
+      "id": "partitionKeyPath",
+      "description": "Partition Key Path",
+      "type": "promptString",
+      "default": "/id"
+    },
+    {
+      "id": "storageAccountName",
+      "description": "Storage Account Name",
+      "type": "promptString"
+    },
+    {
+      "id": "sku",
+      "description": "Storage Account SKU",
+      "type": "promptString",
+      "default": "Standard_LRS"
+    },
+    {
+      "id": "filePath",
+      "description": "Local file path",
+      "type": "promptString"
+    },
+    {
+      "id": "blobName",
+      "description": "Blob name",
+      "type": "promptString"
+    },
+    {
+      "id": "functionAppName",
+      "description": "Function App Name",
+      "type": "promptString"
+    },
+    {
+      "id": "zipFilePath",
+      "description": "Path to ZIP deployment package",
+      "type": "promptString"
+    },
+    {
+      "id": "containerAppName",
+      "description": "Container App Name",
+      "type": "promptString"
+    },
+    {
+      "id": "envName",
+      "description": "Container App Environment Name",
+      "type": "promptString"
+    },
+    {
+      "id": "imageName",
+      "description": "Container Image Name",
+      "type": "promptString"
+    },
+    {
+      "id": "targetPort",
+      "description": "Container Target Port",
+      "type": "promptString",
+      "default": "80"
+    }
+  ]
+}

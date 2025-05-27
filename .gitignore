@@ -16,7 +16,8 @@ ENV/
 
 # IDE files
 .idea/
-.vscode/
+.vscode/*
+!.vscode/tasks.json
 *.sublime-project
 *.sublime-workspace
 
