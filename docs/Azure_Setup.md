@@ -297,7 +297,13 @@ To use Azure authentication in GitHub Actions workflows:
 
 2. Copy the JSON output and store it as a GitHub repository secret named `AZURE_CREDENTIALS`
 
-3. Use the provided GitHub Actions workflow in your pipelines:
+3. You can use the Azure login workflow in two ways:
+
+   **Method 1: As a standalone workflow** (can be triggered manually):
+   
+   This workflow is defined in `.github/workflows/az-login.yml` and can be triggered manually from the Actions tab.
+   
+   **Method 2: As a reusable workflow component** in your pipelines:
 
    ```yaml
    jobs:
@@ -309,4 +315,4 @@ To use Azure authentication in GitHub Actions workflows:
          AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
    ```
 
-This workflow handles Azure authentication and sets up the appropriate environment variables for other jobs to use.
+Both workflows handle Azure authentication and set up the appropriate environment variables for other jobs to use.
