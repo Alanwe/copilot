@@ -18,6 +18,7 @@ Components can be created and deployed for the following Azure services:
 - Azure ML Endpoints
 - Azure Functions
 - Azure Managed Endpoints Serverless
+- REST/OpenAI/Swagger MCP
 
 ## Component Structure
 

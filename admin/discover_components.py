@@ -232,6 +232,9 @@ def detect_deployment_capabilities(component_dir):
             
             if "deploy_to_aci" in content or "deploy_to_container" in content:
                 capabilities["deployment_targets"].append("container")
+                
+            if "deploy_to_rest" in content or "deploy_to_mcp" in content or "deploy_to_openai" in content or "deploy_to_swagger" in content:
+                capabilities["deployment_targets"].append("rest_mcp")
         
         except Exception as e:
             logging.debug(f"Error parsing deployment script: {str(e)}")
@@ -246,6 +249,19 @@ def detect_deployment_capabilities(component_dir):
     if aml_yaml_files:
         if "azure_ml" not in capabilities["deployment_targets"]:
             capabilities["deployment_targets"].append("azure_ml")
+            
+    # Check for OpenAPI/Swagger specification files
+    openapi_files = list(component_dir.glob("*.json")) + list(component_dir.glob("swagger*.yaml")) + list(component_dir.glob("openapi*.yaml"))
+    for file in openapi_files:
+        try:
+            with open(file, 'r') as f:
+                content = f.read()
+                if "swagger" in content.lower() or "openapi" in content.lower():
+                    if "rest_mcp" not in capabilities["deployment_targets"]:
+                        capabilities["deployment_targets"].append("rest_mcp")
+                    break
+        except Exception:
+            pass
     
     return capabilities
 

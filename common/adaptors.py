@@ -152,3 +152,36 @@ class AzureEndpointAdaptor:
         except Exception as e:
             logging.error(f"Error in endpoint execution: {str(e)}")
             return {"error": str(e)}
+
+
+class RESTMCPAdaptor:
+    """Adaptor for REST/OpenAI/Swagger MCP"""
+    
+    @staticmethod
+    def init():
+        """Initialize the REST/OpenAI/Swagger MCP environment"""
+        logging.info("Initializing REST/OpenAI/Swagger MCP environment")
+        
+    @staticmethod
+    def run(component_instance, request_data):
+        """
+        Run the component in REST/OpenAI/Swagger MCP context
+        
+        Args:
+            component_instance: Instance of a BaseComponent
+            request_data: Request data from API call
+            
+        Returns:
+            Response for the API
+        """
+        # Convert REST API request to component inputs
+        logging.info("Processing REST/OpenAI/Swagger request")
+        
+        # Run the component
+        logging.info("Running component")
+        try:
+            result = component_instance.run(request_data)
+            return result
+        except Exception as e:
+            logging.error(f"Error in REST/OpenAI/Swagger execution: {str(e)}")
+            return {"error": str(e), "status_code": 500}

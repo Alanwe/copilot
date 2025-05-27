@@ -344,7 +344,50 @@ Example function.json:
 }
 ```
 
-### 3. Deployment Strategy
+### 3. REST/OpenAI/Swagger MCP
+
+For REST/OpenAI/Swagger MCP components:
+- Define a clear OpenAPI (Swagger) specification
+- Implement consistent RESTful endpoints
+- Support standard HTTP methods (GET, POST, PUT, DELETE)
+- Include proper authentication and authorization mechanisms
+- Handle rate limiting and throttling appropriately
+
+Example OpenAPI specification:
+
+```yaml
+openapi: 3.0.0
+info:
+  title: Component API
+  version: 1.0.0
+  description: API for component
+paths:
+  /component:
+    post:
+      summary: Process data using the component
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                text:
+                  type: string
+                  description: Text to process
+      responses:
+        '200':
+          description: Successful processing
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: object
+```
+
+### 4. Deployment Strategy
 
 Each component should include:
 - Clear deployment scripts
