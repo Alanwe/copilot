@@ -44,6 +44,9 @@ For detailed authentication instructions and security best practices, please see
 3. Configure additional required secrets:
    - `AZURE_SUBSCRIPTION_ID`: Your Azure subscription ID
    - `AZURE_RESOURCE_GROUP`: Default resource group for deployments
+   - `AZURE_LOCATION`: Default Azure region for deployments (optional, defaults to eastus)
+
+4. You can test your Azure authentication setup by manually triggering the `az-login` workflow from the Actions tab in your GitHub repository.
 
 ### Key Vault Configuration
 
