@@ -6,6 +6,7 @@ This guide provides detailed instructions on setting up and configuring Azure re
 
 - An active Azure account with appropriate permissions
 - Administrative access on your local machine to install software
+- Azure CLI installed (see installation instructions below)
 
 ## Installing Azure CLI
 
@@ -245,3 +246,67 @@ To manage multiple environments (dev, test, prod):
 - Azure CLI help: `az --help` or `az <command> --help`
 - Extension help: `az <extension-name> --help`
 - For additional support, please refer to [Azure's official documentation](https://docs.microsoft.com/en-us/azure/)
+
+## Azure Authentication in Development Environments
+
+### Devcontainer Authentication
+
+This project includes a devcontainer configuration that allows you to work with Azure seamlessly. When you open the project in VS Code with the Remote - Containers extension, the devcontainer will automatically:
+
+1. Install Azure CLI and required extensions
+2. Set up the development environment
+3. Attempt to authenticate with Azure if credentials are provided
+
+To set up Azure authentication in the devcontainer:
+
+1. Copy the template environment file:
+   ```bash
+   cp .devcontainer/devcontainer.env.template .devcontainer/devcontainer.env
+   ```
+
+2. Edit `.devcontainer/devcontainer.env` and add your Azure credentials using one of these methods:
+
+   **Method 1: Individual service principal credentials**
+   ```
+   AZURE_SUBSCRIPTION_ID=your-subscription-id
+   AZURE_CLIENT_ID=your-client-id
+   AZURE_CLIENT_SECRET=your-client-secret
+   AZURE_TENANT_ID=your-tenant-id
+   ```
+
+   **Method 2: JSON credentials (from `az ad sp create-for-rbac --sdk-auth`)**
+   ```
+   AZURE_CREDENTIALS={"clientId":"xxx","clientSecret":"xxx","subscriptionId":"xxx","tenantId":"xxx"}
+   ```
+
+3. Restart the devcontainer for the changes to take effect
+
+If no credentials are provided, you'll be prompted to authenticate interactively when needed.
+
+### GitHub Actions Authentication
+
+To use Azure authentication in GitHub Actions workflows:
+
+1. Create a service principal with appropriate permissions:
+   ```bash
+   az ad sp create-for-rbac --name "GitHubActionsAzure" \
+                          --role contributor \
+                          --scopes /subscriptions/{subscription-id} \
+                          --sdk-auth
+   ```
+
+2. Copy the JSON output and store it as a GitHub repository secret named `AZURE_CREDENTIALS`
+
+3. Use the provided GitHub Actions workflow in your pipelines:
+
+   ```yaml
+   jobs:
+     azure-auth:
+       uses: ./.github/workflows/azure-auth.yml
+       with:
+         resource-group: your-resource-group-name
+       secrets:
+         AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+   ```
+
+This workflow handles Azure authentication and sets up the appropriate environment variables for other jobs to use.
