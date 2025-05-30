@@ -17,9 +17,11 @@ RUN curl -sSL https://install.python-poetry.org | python3 -
 ENV PATH="/root/.local/bin:${PATH}"
 
 # Install Azure CLI extensions
+RUN echo "Installing Azure CLI extensions..."
 RUN az extension add --name azure-devops --allow-preview true || true
 RUN az extension add --name storage-preview --allow-preview true || true
 RUN az extension add --name ml -y || true
+
 
 # Copy entrypoint script
 COPY .devcontainer/entrypoint.sh /usr/local/bin/entrypoint.sh
