@@ -1,36 +1,40 @@
 {
-    "name": "Azure Components Foundry",
-    "build": {
-        "dockerfile": "Dockerfile",
-        "context": ".."
+  "name": "Azure Components Foundry",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".."
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/azure-cli:1": {
+      "version": "latest"
     },
-    "features": {
-        "ghcr.io/devcontainers/features/azure-cli:1": {
-            "version": "latest"
-        },
-        "ghcr.io/devcontainers/features/python:1": {
-            "version": "3.9"
-        }
-    },
-    "runArgs": [
-        "--env-file", "${localWorkspaceFolder}/.devcontainer/devcontainer.env"
-    ],
-    "postCreateCommand": "bash .devcontainer/post-create.sh",
-    "customizations": {
-        "vscode": {
-            "extensions": [
-                "ms-python.python",
-                "ms-toolsai.jupyter",
-                "ms-azure-devops.azure-pipelines",
-                "ms-azuretools.vscode-azurefunctions",
-                "ms-azuretools.vscode-docker"
-            ],
-            "settings": {
-                "python.defaultInterpreterPath": "/usr/local/bin/python",
-                "python.linting.enabled": true,
-                "python.linting.pylintEnabled": true
-            }
-        }
-    },
-    "remoteUser": "vscode"
+    "ghcr.io/devcontainers/features/python:1": {
+      "version": "3.9"
+    }
+  },
+  "runArgs": [
+    "--env-file", "${localWorkspaceFolder}/.devcontainer/devcontainer.env",
+    "--dns=8.8.8.8"
+  ],
+  "mounts": [
+    "source=/mnt/c/Users/alanwe/.azure,target=/home/vscode/.azure,type=bind,consistency=cached"
+  ],
+  "postCreateCommand": "bash .devcontainer/post-create.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-toolsai.jupyter",
+        "ms-azure-devops.azure-pipelines",
+        "ms-azuretools.vscode-azurefunctions",
+        "ms-azuretools.vscode-docker"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.linting.enabled": true,
+        "python.linting.pylintEnabled": true
+      }
+    }
+  },
+  "remoteUser": "vscode"
 }

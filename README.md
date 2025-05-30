@@ -89,4 +89,23 @@ The Azure Components Foundry provides seamless Azure integration:
 - Service principal support for non-interactive environments
 - Helper utilities in the common/authentication module
 
+## Azure Connectivity
+
+If you're experiencing issues connecting to Azure services in the devcontainer environment, you can use the provided connectivity helper:
+
+```bash
+# Check Azure connectivity and attempt authentication
+./scripts/check_azure.sh
+```
+
+This script will:
+1. Check network connectivity to Azure endpoints
+2. Attempt authentication if connectivity is available
+3. Provide helpful guidance if issues are detected
+
+If your devcontainer environment has network restrictions preventing Azure connectivity, you'll need to:
+1. Ensure your network allows connections to Azure services (login.microsoftonline.com, etc.)
+2. Configure proxy settings if your environment requires a proxy
+3. Try manual authentication once connectivity is established
+
 For detailed setup instructions, refer to the [Azure Setup Guide](docs/Azure_Setup.md).

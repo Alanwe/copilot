@@ -519,10 +519,16 @@ def setup_azure_environment(subscription_id=None, resource_group=None):
         )
         
         if login_result.returncode != 0:
-            logging.warning("Not logged into Azure. Initiating login...")
-            login_process = subprocess.run(["az", "login"], check=True)
-            if login_process.returncode != 0:
-                return {"status": "error", "message": "Failed to log in to Azure"}
+            logging.info("Not logged into Azure. Attempting to authenticate...")
+            
+            # Try to authenticate with devcontainer.env credentials first
+            if try_auth_with_devcontainer_env():
+                logging.info("Successfully authenticated with service principal credentials")
+            else:
+                logging.warning("Authentication with service principal credentials failed")
+                print("\nAzure CLI is not authenticated.")
+                print("For detailed authentication instructions, see docs/Azure_Setup.md")
+                return {"status": "warning", "message": "Not authenticated with Azure. See docs/Azure_Setup.md"}
         
         # Set subscription if provided
         if subscription_id:
@@ -566,6 +572,123 @@ def setup_azure_environment(subscription_id=None, resource_group=None):
     except Exception as e:
         logging.error(f"Error setting up Azure environment: {str(e)}")
         return {"status": "error", "message": str(e)}
+
+
+def try_auth_with_devcontainer_env():
+    """
+    Attempt to authenticate with Azure using service principal credentials 
+    from .devcontainer/devcontainer.env file.
+    
+    Returns:
+        bool: True if authentication was successful, False otherwise
+    """
+    logging.info("Checking for service principal credentials in .devcontainer/devcontainer.env")
+    
+    # Get repo root
+    repo_root = get_repo_root()
+    env_file_path = os.path.join(repo_root, ".devcontainer", "devcontainer.env")
+    
+    # Check if env file exists
+    if not os.path.exists(env_file_path):
+        logging.warning("No devcontainer.env file found at %s", env_file_path)
+        return False
+    
+    # Parse env file
+    env_vars = {}
+    try:
+        with open(env_file_path, 'r') as f:
+            for line in f:
+                line = line.strip()
+                if not line or line.startswith('#'):
+                    continue
+                
+                try:
+                    key, value = line.split('=', 1)
+                    env_vars[key.strip()] = value.strip()
+                except ValueError:
+                    continue
+    except Exception as e:
+        logging.warning(f"Error reading devcontainer.env: {str(e)}")
+        return False
+    
+    # Try AZURE_CREDENTIALS if available
+    azure_creds = env_vars.get("AZURE_CREDENTIALS")
+    if azure_creds:
+        try:
+            # Remove quotes if present
+            if azure_creds.startswith('"') and azure_creds.endswith('"'):
+                azure_creds = azure_creds[1:-1]
+                
+            creds = json.loads(azure_creds)
+            logging.info("Attempting to authenticate using AZURE_CREDENTIALS from devcontainer.env")
+            
+            try:
+                login_process = subprocess.run(
+                    [
+                        "az", "login", 
+                        "--service-principal",
+                        "--username", creds.get("clientId"),
+                        "--password", creds.get("clientSecret"),
+                        "--tenant", creds.get("tenantId"),
+                        "--output", "none"
+                    ],
+                    capture_output=True,
+                    text=True,
+                    check=True,
+                    timeout=30  # Add timeout to avoid long waits
+                )
+                
+                if creds.get("subscriptionId"):
+                    subprocess.run(
+                        ["az", "account", "set", "--subscription", creds.get("subscriptionId")],
+                        check=True,
+                        timeout=10
+                    )
+                
+                logging.info("Successfully authenticated using AZURE_CREDENTIALS")
+                return True
+            except (subprocess.SubprocessError, subprocess.TimeoutExpired) as e:
+                logging.warning(f"Failed to authenticate using AZURE_CREDENTIALS: {str(e)}")
+        except json.JSONDecodeError:
+            logging.warning("Failed to parse AZURE_CREDENTIALS as JSON")
+    
+    # Try individual service principal credentials
+    client_id = env_vars.get("AZURE_CLIENT_ID")
+    client_secret = env_vars.get("AZURE_CLIENT_SECRET")
+    tenant_id = env_vars.get("AZURE_TENANT_ID")
+    subscription_id = env_vars.get("AZURE_SUBSCRIPTION_ID")
+    
+    if all([client_id, client_secret, tenant_id]):
+        logging.info("Attempting to authenticate using service principal credentials from devcontainer.env")
+        try:
+            login_process = subprocess.run(
+                [
+                    "az", "login", 
+                    "--service-principal",
+                    "--username", client_id,
+                    "--password", client_secret,
+                    "--tenant", tenant_id,
+                    "--output", "none"
+                ],
+                capture_output=True,
+                text=True,
+                check=True,
+                timeout=30  # Add timeout to avoid long waits
+            )
+            
+            if subscription_id:
+                subprocess.run(
+                    ["az", "account", "set", "--subscription", subscription_id],
+                    check=True,
+                    timeout=10
+                )
+            
+            logging.info("Successfully authenticated using service principal credentials")
+            return True
+        except (subprocess.SubprocessError, subprocess.TimeoutExpired) as e:
+            logging.warning(f"Failed to authenticate using service principal credentials: {str(e)}")
+    
+    return False
 
 
 def main():
