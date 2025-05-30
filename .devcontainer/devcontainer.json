@@ -16,9 +16,6 @@
     "--env-file", "${localWorkspaceFolder}/.devcontainer/devcontainer.env",
     "--dns=8.8.8.8"
   ],
-  "mounts": [
-    "source=/mnt/c/Users/alanwe/.azure,target=/home/vscode/.azure,type=bind,consistency=cached"
-  ],
   "postCreateCommand": "bash .devcontainer/post-create.sh",
   "customizations": {
     "vscode": {
