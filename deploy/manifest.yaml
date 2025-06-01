@@ -1,0 +1,82 @@
+# Azure Components Foundry Deployment Manifest
+# Single source of truth for all component deployments
+
+# Container registry configuration
+acr: myacr.azurecr.io
+imageName: azure-components-foundry
+imageTag: latest  # Will be overridden with Git SHA in CI/CD
+
+# Global defaults (can be overridden per group/deployment)
+defaults:
+  instance_type: Standard_DS3_v2
+  instance_count: 1
+  request_timeout_ms: 60000
+  max_concurrent_requests: 10
+  target_port: 8000
+  min_replicas: 0
+  max_replicas: 10
+
+# Deployment groups - organize by environment/region
+groups:
+  # Development environment
+  dev-eastus:
+    subscription: "sub-dev-12345678-1234-1234-1234-123456789012"
+    resourceGroup: "rg-components-dev"
+    region: "eastus"
+    deployments:
+      - component: sentiment_analyzer
+        services: [containerapp]
+        overrides:
+          min_replicas: 1
+          max_replicas: 5
+      - component: word_count
+        services: [aml_online, function, containerapp] 
+        overrides:
+          instance_type: Standard_DS2_v2
+          instance_count: 1
+          min_replicas: 0
+          max_replicas: 3
+
+  # Test environment  
+  test-westus:
+    subscription: "sub-test-12345678-1234-1234-1234-123456789012"
+    resourceGroup: "rg-components-test"
+    region: "westus"
+    deployments:
+      - component: word_count
+        services: [aml_online, aml_batch, containerapp]
+        overrides:
+          instance_type: Standard_DS3_v2
+          instance_count: 2
+
+  # Production environment
+  prod-westus2:
+    subscription: "sub-prod-12345678-1234-1234-1234-123456789012"
+    resourceGroup: "rg-components-prod"
+    region: "westus2"
+    deployments:
+      - component: word_count
+        services: [aml_online, aml_batch, function, containerapp]
+        overrides:
+          instance_type: Standard_DS4_v2
+          instance_count: 3
+          min_replicas: 2
+          max_replicas: 20
+      - component: sentiment_analyzer
+        services: [aml_online, containerapp]
+        overrides:
+          instance_type: Standard_DS3_v2
+          instance_count: 2
+
+# Component-specific defaults (optional)
+components:
+  sentiment_analyzer:
+    handler: "components.sentiment_analyzer.src.component:predict"
+    defaults:
+      max_concurrent_requests: 20
+      
+  word_count:
+    handler: "components.word_count.src.component:predict"
+    defaults:
+      request_timeout_ms: 20000
+      max_concurrent_requests: 15

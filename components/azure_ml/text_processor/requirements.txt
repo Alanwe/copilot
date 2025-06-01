@@ -1,9 +1,0 @@
-# This file is auto-generated from pyproject.toml
-# To update, run: python -m scripts.manage_dependencies env --service azure_ml --component text_processor
-
-nltk>=3.8.1,<4.0.0
-scikit-learn>=1.3.2,<2.0.0
-azure-identity>=1.15.0,<2.0.0
-azure-keyvault-secrets>=4.7.0,<5.0.0
-azure-storage-blob>=12.19.0,<13.0.0
-pydantic>=2.5.0,<3.0.0

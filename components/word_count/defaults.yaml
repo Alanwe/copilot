@@ -1,0 +1,13 @@
+# Default configuration for Word Count component
+name: word_count
+version: 0.1.0
+description: Simple Word Count component for Azure Components Foundry
+
+# Environment variables that will be set when the component is deployed
+environment:
+  HANDLER: components.word_count.src.component:predict
+  LOG_LEVEL: INFO
+
+# Default configuration options
+configuration:
+  max_batch_size: 100

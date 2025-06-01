@@ -1,0 +1,182 @@
+name: Build and Deploy Components
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      deploy_group:
+        description: 'Deployment group to deploy (leave empty for all)'
+        required: false
+        type: string
+      deploy_service:
+        description: 'Service type to deploy (leave empty for all)'
+        required: false
+        type: choice
+        options:
+          - ''
+          - aml_online
+          - aml_batch
+          - function
+          - containerapp
+
+env:
+  REGISTRY: ${{ secrets.ACR_REGISTRY }}
+  IMAGE_NAME: azure-components-foundry
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: latest
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+          
+      - name: Install dependencies
+        run: poetry install
+        
+      - name: Install yq for YAML processing
+        run: |
+          sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+          sudo chmod +x /usr/local/bin/yq
+        
+      - name: Validate manifest
+        run: make validate-manifest
+        
+      - name: Run tests
+        run: make test
+
+  build:
+    needs: validate
+    runs-on: ubuntu-latest
+    outputs:
+      image-tag: ${{ steps.vars.outputs.image-tag }}
+      image-uri: ${{ steps.vars.outputs.image-uri }}
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up variables
+        id: vars
+        run: |
+          IMAGE_TAG=${GITHUB_SHA::8}
+          echo "image-tag=${IMAGE_TAG}" >> $GITHUB_OUTPUT
+          echo "image-uri=${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}" >> $GITHUB_OUTPUT
+          
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+          
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: |
+            ${{ steps.vars.outputs.image-uri }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
+    environment: 
+      name: ${{ github.ref == 'refs/heads/main' && 'production' || 'development' }}
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: latest
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+          
+      - name: Install dependencies
+        run: poetry install
+        
+      - name: Install yq for YAML processing
+        run: |
+          sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+          sudo chmod +x /usr/local/bin/yq
+          
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          
+      - name: Deploy to Development
+        if: github.ref != 'refs/heads/main'
+        run: |
+          GROUP_ARG=""
+          SERVICE_ARG=""
+          
+          if [ -n "${{ github.event.inputs.deploy_group }}" ]; then
+            GROUP_ARG="--group ${{ github.event.inputs.deploy_group }}"
+          fi
+          
+          if [ -n "${{ github.event.inputs.deploy_service }}" ]; then
+            SERVICE_ARG="--service ${{ github.event.inputs.deploy_service }}"
+          fi
+          
+          python deploy/run.py \
+            --image ${{ needs.build.outputs.image-uri }} \
+            --manifest deploy/manifest.yaml \
+            ${GROUP_ARG} ${SERVICE_ARG} \
+            --verbose
+            
+      - name: Deploy to Production
+        if: github.ref == 'refs/heads/main'
+        run: |
+          # Deploy only production groups for main branch
+          python deploy/run.py \
+            --image ${{ needs.build.outputs.image-uri }} \
+            --manifest deploy/manifest.yaml \
+            --group prod-westus2 \
+            --verbose
+
+  test-deployment:
+    needs: [build, deploy]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          
+      - name: Test deployed endpoints
+        run: |
+          echo "Testing deployed endpoints..."
+          # Add endpoint testing logic here
+          # For example, test Azure ML endpoints, Container Apps, etc.
+          
+      - name: Update deployment status
+        if: success()
+        run: |
+          echo "All deployments successful!"
+          # Optionally update manifest with deployment status

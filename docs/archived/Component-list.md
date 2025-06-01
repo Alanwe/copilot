@@ -1,0 +1,2 @@
+1) Text Processor - Example component that will count words, filtered by word length
+-- Supported Targets  Azure Functions, REST/OpenAI/Swagger MCP, Containerized Deployments,Azure ML Batch Inference, Azure Managed Endpoints Serverless

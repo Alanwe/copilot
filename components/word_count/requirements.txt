@@ -1,0 +1,7 @@
+# Requirements for word_count component and runtime system
+fastapi>=0.115.0
+uvicorn>=0.23.0
+azure-functions>=1.17.0
+pydantic>=2.0.0
+PyYAML>=6.0
+python-dotenv>=1.0.0

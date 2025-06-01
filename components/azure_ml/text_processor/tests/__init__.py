@@ -1,1 +1,0 @@
-# Text Processor component tests

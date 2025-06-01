@@ -1,0 +1,17 @@
+$schema: https://azuremlschemas.azureedge.net/latest/batchDeployment.schema.json
+name: ${{DEPLOY_NAME}}
+endpoint_name: ${{ENDPOINT_NAME}}
+model:
+  image: ${{IMAGE_URI}}
+environment_variables:
+  HANDLER: "${{HANDLER}}"
+compute: ${{COMPUTE_NAME}}
+instance_count: ${{INSTANCE_COUNT}}
+max_concurrency_per_instance: ${{MAX_CONCURRENCY}}
+mini_batch_size: ${{MINI_BATCH_SIZE}}
+retry_settings:
+  max_retries: 3
+  timeout: 300
+logging_level: info
+output_action: append_row
+output_file_name: predictions.jsonl
